@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Getting Start haha </title>
+    <link rel="stylesheet" href="element/element.css" />
+    <style>
+        .carousel1 {
+            height: 450px;
+        }
+
+        .carousel2 {
+            height: 1450px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="page">
+
+        <el-alert title="BLE" type="success" effect="dark">
+        </el-alert>
+        <el-row>
+            <el-button type="primary" @click="checkIsSupportBle">检查BLE</el-button>
+            <el-button type="primary" @click="checkIsBleEnable">检查BLE状态</el-button>
+            <el-button type="primary" @click="enableBluetooth">开启蓝牙</el-button>
+            <el-button type="primary" @click="cancelScan">停止搜索</el-button>
+        </el-row>
+        <div>设备列表</div>
+        <div v-for="(item,index) in scanResultList" @click="connect(item)" style="border: 1px;">
+            <br />
+            <div>name: {{item.name}}</div>
+            <div>connecting: {{item.connecting}}</div>
+            <div>connected: {{item.connected}}</div>
+            <div>address: {{item.address}}</div>
+            <div>mAddress: {{item.device.mAddress}}</div>
+        </div>
+        <div>服务列表</div>
+        <div v-for="(item,index) in serviceList" @click="serviceClick(item)">
+            <br />
+            服务UUID: {{item.uuid}}
+            <div v-for="(item2,index2) in item.characteristicInfoList" style="background: #70c6c9;">
+                ------------------------------------
+                <div>特征 indicative: {{item2.indicative}}</div>>
+                <div>特征 notify: {{item2.notify}}</div>>
+                <div>特征 readable: {{item2.readable}}</div>>
+                <div>特征 uuid: {{item2.uuid}}</div>>
+                <div>特征 writeable: {{item2.writeable}}</div>>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/bundle.js"></script>
+<script src="/js/vue.min.js"></script>
+<script src="/element/element.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/ble.js"></script>
+<script src="/js/volume.js"></script>
+<script>
+    var page = new Vue({
+        el: '#page',
+        filters: {},
+        data: {
+            mac: null,
+            scanResultList: [],
+            serviceList: [],
+            isBlueEnable: false,
+        },
+        methods: {
+            btn: function () {
+                this.$notify({
+                    title: '标题名称',
+                    message: h('i', { style: 'color: teal' }, 'hello')
+                });
+            },
+            enableBluetooth: function () {
+                var that = this
+                BleManager.enableBluetooth(function (data) {
+                    console.log(data)
+                    that.scanResultList = data
+                })
+            },
+            checkIsSupportBle: function () {
+                var str = "检查是否支持蓝牙" + BleManager.isSupportBle()
+                console.log(str)
+            },
+            checkIsBleEnable: function () {
+                var str = "检查蓝牙是否开启" + BleManager.isBlueEnable()
+                console.log(str)
+            },
+            cancelScan: function () {
+                var str = "停止搜索" + BleManager.cancelScan()
+                console.log(str)
+            },
+            connect: function (item) {
+                var that = this
+                this.mac = item.device.mAddress
+                BleManager.connect(this.mac)
+                    .setOnConnectSuccess(function (bleDevice, status) {
+                        that.$notify({
+                            title: that.mac,
+                            message: '连接成功',
+                            type: 'success'
+                        });
+                        that.serviceList = BleManager.listService(that.mac)
+                    }).setOnConnectFail(function (bleDevice, exception) {
+                        that.$notify({
+                            title: that.mac,
+                            message: '连接失败',
+                            type: 'warning'
+                        });
+                    }).setOnDisConnected(function (bleDevice, isSelf) {
+                        that.$notify({
+                            title: that.mac,
+                            message: '断开连接',
+                            type: 'warning'
+                        });
+                    })
+
+            },
+            serviceClick: function (item) {
+                var characteristicInfoList = item.characteristicInfoList
+                characteristicInfoList.forEach(item2 => {
+                    console.log(item2)
+                    if (item2.notify || item2.indicative) {
+                        BleManager.notify(this.mac, item.uuid, item2.uuid, function (data) {
+                            console.log("收到data-" + data)
+                        })
+                    }
+                    if(item2.writeable){
+                        BleManager.write(this.mac, item.uuid, item2.uuid,"00112233445566")
+                    }
+                }); 
+
+            }
+
+        }, created: function () {
+            console.info("测试console拦截")
+            var that = this
+            Common.textLog("测试本地调用")
+        }
+    })
+</script>
+
+</html>

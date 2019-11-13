@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no"/>
+    <link rel="stylesheet" href="./element/element.css"/>
+</head>
+<body style="margin: 10px;padding: 0">
+<div id="page">
+    <div style="position: absolute;top: 30%;font-size:50px;color:#500"><span
+            v-text="welcome"></span><span class="el-icon-loading"></span>
+        <div style="font-size:20px;color:#500" v-text="title"></div>
+    </div>
+    <div style="font-size:5px;color:#500;position: fixed;bottom: 10px;text-align: center;width: 100%;"
+         @click="setDebug">中泰能提供技术支持
+    </div>
+</div>
+</body>
+<script src="./js/vue.min.js"></script>
+<script src="./element/element.js"></script>
+<script src="./js/common.js"></script>
+<script>
+    var page = new Vue({
+        el: '#page',
+        filters: {},
+        data: {
+            welcome:'欢迎使用',
+            title:null
+        },
+        methods: {
+            setDebug:function () {
+                this.$notify({
+                                title: "开启Debug模式",
+                                message: "成功",
+                                type: 'success'
+                            });
+                Common.setDebug(true)
+            },
+
+        },created:function(){
+            var  welcomeData = [
+                '欢迎使用',
+                '正在加载资源',
+                '请稍后',
+                '更新中',
+                '首次比较慢',
+                '再等一会',
+                '努力中',
+                '网络有点差',
+                '马上',
+                '成功就在眼前',
+                '即将完成',
+                '不好意思',
+                '尽力了',
+                '请稍后',
+                '再等一会',
+                '努力中',
+                '网络有点差',
+                '重启试试??'
+            ]
+            var that = this
+            var welcomeCount = 0
+            timer = setInterval(function(){
+                if(welcomeCount < welcomeData.length){
+                    that.welcome = welcomeData[welcomeCount]
+                    welcomeCount++;
+                }else{
+                    clearInterval(timer)
+                }
+            },10000)
+            var sysInfo = Common.sysInfo();
+            this.title = sysInfo.appName+' '+sysInfo.versionName
+
+        }
+    })
+
+
+</script>
+</html>
