@@ -1,6 +1,6 @@
 package com.ztn.web.utils;
 
-public class Hex {
+public class HexUtil {
     public static String bytesToHexString(byte[] src){
         StringBuilder stringBuilder = new StringBuilder("");
         if (src == null || src.length <= 0) {

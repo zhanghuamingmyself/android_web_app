@@ -3,13 +3,11 @@ package com.ztn.web.bean.response;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import lombok.Data;
-
 /**
  * @Author:zhm
  * @Date:2019/8/28 18:28
  */
-@Data
+
 public class BaseResponse<T> {
 
     private static String serverAddress;
@@ -59,6 +57,54 @@ public class BaseResponse<T> {
     private String code2;
     private String address = serverAddress;
 
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public String getCode2() {
+        return code2;
+    }
+
+    public void setCode2(String code2) {
+        this.code2 = code2;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public BaseResponse(Boolean status, String code, String msg, T data, String code2) {
         this.status = status;

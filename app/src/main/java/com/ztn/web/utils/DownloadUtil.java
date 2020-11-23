@@ -12,8 +12,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DownloadUtils {
-    private final static String TAG = DownloadUtils.class.getSimpleName();
+public class DownloadUtil {
+    private final static String TAG = DownloadUtil.class.getSimpleName();
 
     private static Map<Integer, String> Mstatues = new HashMap<>();
     private static Map<Integer, String> MtotalBytes = new HashMap<>();
@@ -124,7 +124,7 @@ public class DownloadUtils {
                     @Override
                     protected void warn(BaseDownloadTask task) {
                         super.warn(task);
-                        MyLog.i(TAG, "-----------warn---------" + task);
+                        LogUtil.i(TAG, "-----------warn---------" + task);
                         callBack.error(task.getId(), "warn");
                     }
                 }).start();

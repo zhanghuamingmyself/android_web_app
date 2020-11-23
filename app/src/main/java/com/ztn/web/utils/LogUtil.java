@@ -5,7 +5,7 @@ import android.util.Log;
 import com.ztn.web.AppConfig;
 
 
-public class MyLog {
+public class LogUtil {
     private static final Boolean IS_LOG = AppConfig.IS_LOG;
 
     public static void e(String tag, String msg) {

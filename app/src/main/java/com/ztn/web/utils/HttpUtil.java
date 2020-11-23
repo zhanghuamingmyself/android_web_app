@@ -1,7 +1,5 @@
 package com.ztn.web.utils;
 
-import com.google.gson.Gson;
-import com.ztn.web.App;
 import com.ztn.web.AppConfig;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -11,12 +9,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
-public class HttpUtils {
+public class HttpUtil {
 
-    public static final String CONNECT_CENTER_URL = AppConfig.CENTER_SERVER_BASE_URL +"device/connect";
-    public static final String DOWNLOAD_RUNFILE = AppConfig.CENTER_SERVER_BASE_URL +"activity/download/runFile";
+    public static final String CONNECT_CENTER_URL = AppConfig.CENTER_SERVER_BASE_URL +"app/device/connect";
+    public static final String DOWNLOAD_ACTIVITY = AppConfig.CENTER_SERVER_BASE_URL +"app/activity/version/download";
 
-    private static final String TAG = HttpUtils.class.getSimpleName();
+    private static final String TAG = HttpUtil.class.getSimpleName();
     private static final OkHttpClient okHttpClient = new OkHttpClient();
 
 
@@ -27,9 +25,7 @@ public class HttpUtils {
         call.enqueue(callback);
     }
 
-    public static void doPost(String url, Object object, Callback callback) {
-        Gson gson = App.getInstance().getGson();
-        String json = gson.toJson(object);
+    public static void doPost(String url, String json, Callback callback) {
         RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8")
                 , json);
 

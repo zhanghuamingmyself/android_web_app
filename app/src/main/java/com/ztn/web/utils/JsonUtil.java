@@ -1,16 +1,13 @@
 package com.ztn.web.utils;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import java.util.ArrayList;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-public class GsonUtil {
+public class JsonUtil {
     private static Gson gson = null;
 
     static {
@@ -19,7 +16,7 @@ public class GsonUtil {
         }
     }
 
-    private GsonUtil() {
+    private JsonUtil() {
     }
 
     /**
@@ -28,7 +25,7 @@ public class GsonUtil {
      * @param object
      * @return
      */
-    public static String BeanToJson(Object object) {
+    public static String toJson(Object object) {
         String gsonString = null;
         if (gson != null) {
             gsonString = gson.toJson(object);
@@ -43,10 +40,24 @@ public class GsonUtil {
      * @param cls
      * @return
      */
-    public static <T> T GsonToBean(String gsonString, Class<T> cls) {
+    public static <T> T fromJson(String gsonString, Class<T> cls) {
+        if (null == gsonString || gsonString.equals("")) {
+            return null;
+        }
         T t = null;
         if (gson != null) {
             t = gson.fromJson(gsonString, cls);
+        }
+        return t;
+    }
+
+    public static <T> T fromJson(String gsonString, Type type) {
+        if (null == gsonString || gsonString.equals("")) {
+            return null;
+        }
+        T t = null;
+        if (gson != null) {
+            t = gson.fromJson(gsonString, type);
         }
         return t;
     }
@@ -59,30 +70,11 @@ public class GsonUtil {
      * @param cls
      * @return
      */
-    public static <T> List<T> GsonToList(String gsonString, Class<T> cls) {
+    public static <T> List<T> jsonToList(String gsonString, Class<T> cls) {
         List<T> list = null;
         if (gson != null) {
             list = gson.fromJson(gsonString, new TypeToken<List<T>>() {
             }.getType());
-        }
-        return list;
-    }
-
-    /**
-     * 转成list
-     * 解决泛型问题
-     *
-     * @param json
-     * @param cls
-     * @param <T>
-     * @return
-     */
-    public <T> List<T> jsonToList(String json, Class<T> cls) {
-        Gson gson = new Gson();
-        List<T> list = new ArrayList<T>();
-        JsonArray array = new JsonParser().parse(json).getAsJsonArray();
-        for (final JsonElement elem : array) {
-            list.add(gson.fromJson(elem, cls));
         }
         return list;
     }
@@ -94,7 +86,7 @@ public class GsonUtil {
      * @param gsonString
      * @return
      */
-    public static <T> List<Map<String, T>> GsonToListMaps(String gsonString) {
+    public static <T> List<Map<String, T>> jsonToListMaps(String gsonString) {
         List<Map<String, T>> list = null;
         if (gson != null) {
             list = gson.fromJson(gsonString,
@@ -110,7 +102,7 @@ public class GsonUtil {
      * @param gsonString
      * @return
      */
-    public static <T> Map<String, T> GsonToMaps(String gsonString) {
+    public static <T> Map<String, T> jsonToMaps(String gsonString) {
         Map<String, T> map = null;
         if (gson != null) {
             map = gson.fromJson(gsonString, new TypeToken<Map<String, T>>() {

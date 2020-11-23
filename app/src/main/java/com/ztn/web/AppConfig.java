@@ -27,10 +27,12 @@ public class AppConfig {
     public static final Boolean IS_LOG = true;
     public static final String BASE_PATH = Environment.getExternalStoragePublicDirectory("") + File.separator + AppConfig.class.getPackage().getName() + File.separator;
     public static final String WEBSITE_PATH = BASE_PATH + "web";
-    public static final String CONFIG_PATH = BASE_PATH + "config" + File.separator;
     public static final String ACTIVITY_PATH = WEBSITE_PATH + File.separator + "activity" + File.separator;
     public static final String DEFAULT_APP_PATH = "file:///android_asset/web/index.html";
-//    public static final String CENTER_SERVER_BASE_URL = "http://192.168.0.109:7777/";
-    public static final String CENTER_SERVER_BASE_URL = "http://app.ztn-tech.com:7777/";
+//    public static final String CENTER_SERVER_BASE_URL = "http://192.168.3.232:7778/";
+    public static final String CENTER_SERVER_BASE_URL = "https://core.ztn-tech.com/";
 
+    public static final String APP_KEY="ztniot20200819mobileapp";
+    public static final String APP_SECRET="f87845d77dec485881308e314b2fd9a5";
+    public static final Integer COMPANY_ID = 23;
 }

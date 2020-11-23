@@ -1,49 +1,37 @@
 package com.ztn.web;
 
 import android.app.Application;
+import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
-import com.ztn.web.bean.FileConfig;
 
-import lombok.NonNull;
 
 public class App extends Application {
 
-	private static App mInstance;
-	private Gson gson;
-	private FileConfig fileConfig;
+    private final static String TAG = App.class.getSimpleName();
+    private static App mInstance;
 
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		FileDownloader.init(this.getApplicationContext());
-		if (mInstance == null) {
-			mInstance = this;
-			initGson();
-		}
-	}
 
-	@NonNull
-	public static App getInstance() {
-		return mInstance;
-	}
 
-	private void initGson() {
-		gson = new Gson();
-	}
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        MultiDex.install(this);
+        FileDownloader.init(this.getApplicationContext());
+        if (mInstance == null) {
+            mInstance = this;
+        }
+//        initMqttClient();
+    }
 
-	public Gson getGson() {
-		return gson;
-	}
 
-	public void setFileConfig(FileConfig fileConfig) {
-		this.fileConfig = fileConfig;
-	}
 
-	public FileConfig getFileConfig() {
-		return fileConfig;
-	}
+    public static App getInstance() {
+        return mInstance;
+    }
+
 
 }

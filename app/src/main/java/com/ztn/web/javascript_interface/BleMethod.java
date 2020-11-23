@@ -10,24 +10,22 @@ import android.webkit.JavascriptInterface;
 import com.ficat.easyble.BleDevice;
 import com.ficat.easyble.BleManager;
 import com.ficat.easyble.gatt.bean.CharacteristicInfo;
+import com.ficat.easyble.gatt.bean.ServiceInfo;
 import com.ficat.easyble.gatt.callback.BleConnectCallback;
 import com.ficat.easyble.gatt.callback.BleNotifyCallback;
 import com.ficat.easyble.gatt.callback.BleReadCallback;
 import com.ficat.easyble.gatt.callback.BleWriteCallback;
 import com.ficat.easyble.scan.BleScanCallback;
-import com.google.gson.Gson;
-import com.ztn.web.App;
 import com.ztn.web.bean.call.IJavaScriptFunction;
-import com.ztn.web.utils.Hex;
-import com.ztn.web.utils.MyLog;
+import com.ztn.web.utils.HexUtil;
+import com.ztn.web.utils.JsonUtil;
+import com.ztn.web.utils.LogUtil;
 
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import lombok.Data;
 
 public class BleMethod implements ActivityCompat.OnRequestPermissionsResultCallback {
     private final static String TAG = BleMethod.class.getSimpleName();
@@ -36,7 +34,6 @@ public class BleMethod implements ActivityCompat.OnRequestPermissionsResultCallb
     private IJavaScriptFunction javaScriptFunction;
     private BleManager bleManager;
     private Activity context;
-    private Gson gson;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
     @Override
@@ -49,11 +46,35 @@ public class BleMethod implements ActivityCompat.OnRequestPermissionsResultCallb
         }
     }
 
-    @Data
+
     private static class MyDeviceServiceInfo {
         private String uuid;
         private com.ficat.easyble.gatt.bean.ServiceInfo serviceInfo;
         private List<CharacteristicInfo> characteristicInfoList;
+
+        public String getUuid() {
+            return uuid;
+        }
+
+        public void setUuid(String uuid) {
+            this.uuid = uuid;
+        }
+
+        public ServiceInfo getServiceInfo() {
+            return serviceInfo;
+        }
+
+        public void setServiceInfo(ServiceInfo serviceInfo) {
+            this.serviceInfo = serviceInfo;
+        }
+
+        public List<CharacteristicInfo> getCharacteristicInfoList() {
+            return characteristicInfoList;
+        }
+
+        public void setCharacteristicInfoList(List<CharacteristicInfo> characteristicInfoList) {
+            this.characteristicInfoList = characteristicInfoList;
+        }
     }
 
     public BleMethod(Activity context, IJavaScriptFunction javaScriptFunction) {
@@ -64,26 +85,25 @@ public class BleMethod implements ActivityCompat.OnRequestPermissionsResultCallb
         }
         this.javaScriptFunction = javaScriptFunction;
         this.context = context;
-        gson = App.getInstance().getGson();
     }
 
     @JavascriptInterface
     public boolean isSupportBle() {
-        MyLog.i(TAG, "ble isSupportBle");
+        LogUtil.i(TAG, "ble isSupportBle");
         return BleManager.supportBle(context);
     }
 
     @JavascriptInterface
     public boolean isBlueEnable() {
-        MyLog.i(TAG, "ble isBlueEnable");
+        LogUtil.i(TAG, "ble isBlueEnable");
         return true;
     }
 
     @JavascriptInterface
     public void enableBluetooth() {
-        MyLog.i(TAG, "ble enableBluetooth");
+        LogUtil.i(TAG, "ble enableBluetooth");
         if (!BleManager.supportBle(context)) {
-            MyLog.e(TAG, "不支持BLE");
+            LogUtil.e(TAG, "不支持BLE");
         }
         bleManager = BleManager.getInstance(context.getApplication());
         BleManager.toggleBluetooth(true);
@@ -97,7 +117,7 @@ public class BleMethod implements ActivityCompat.OnRequestPermissionsResultCallb
             @Override
             public void onLeScan(BleDevice device, int rssi, byte[] scanRecord) {
                 scanResultList.put(device.address, device);
-                javaScriptFunction.evak("onScanning('" + gson.toJson(device) + "')");
+                javaScriptFunction.evak("onScanning('" + JsonUtil.toJson(device) + "')");
             }
 
             @Override
@@ -105,13 +125,13 @@ public class BleMethod implements ActivityCompat.OnRequestPermissionsResultCallb
                 if (startScanSuccess) {
                     scanResultList = new HashMap<>();
                 } else {
-                    MyLog.e(TAG, "ble 扫描失败");
+                    LogUtil.e(TAG, "ble 扫描失败");
                 }
             }
 
             @Override
             public void onFinish() {
-                javaScriptFunction.evak("onScanFinished('" + gson.toJson(scanResultList) + "')");
+                javaScriptFunction.evak("onScanFinished('" + JsonUtil.toJson(scanResultList) + "')");
             }
 
         });
@@ -120,7 +140,7 @@ public class BleMethod implements ActivityCompat.OnRequestPermissionsResultCallb
 
     @JavascriptInterface
     public void cancelScan() {
-        MyLog.i(TAG, "ble cancelScan");
+        LogUtil.i(TAG, "ble cancelScan");
         bleManager.stopScan();
     }
 
@@ -141,25 +161,25 @@ public class BleMethod implements ActivityCompat.OnRequestPermissionsResultCallb
         bleManager.connect(bleDevice, new BleConnectCallback() {
             @Override
             public void onStart(boolean startConnectSuccess, String info, BleDevice device) {
-                MyLog.i(TAG, "ble onStartConnect");
+                LogUtil.i(TAG, "ble onStartConnect");
             }
 
             @Override
             public void onTimeout(BleDevice device) {
-                MyLog.i(TAG, "ble onConnectFail onTimeout");
-                javaScriptFunction.evak("onConnectFail('" + gson.toJson(device) + "')");
+                LogUtil.i(TAG, "ble onConnectFail onTimeout");
+                javaScriptFunction.evak("onConnectFail('" + JsonUtil.toJson(device) + "')");
             }
 
             @Override
             public void onConnected(BleDevice device) {
-                MyLog.i(TAG, "ble onConnectSuccess" + gson.toJson(device));
-                javaScriptFunction.evak("onConnectSuccess('" + gson.toJson(device) + "')");
+                LogUtil.i(TAG, "ble onConnectSuccess" + JsonUtil.toJson(device));
+                javaScriptFunction.evak("onConnectSuccess('" + JsonUtil.toJson(device) + "')");
             }
 
             @Override
             public void onDisconnected(BleDevice device) {
-                MyLog.i(TAG, "ble onDisConnected " + gson.toJson(device));
-                javaScriptFunction.evak("onDisConnected('" + gson.toJson(device) + "')");
+                LogUtil.i(TAG, "ble onDisConnected " + JsonUtil.toJson(device));
+                javaScriptFunction.evak("onDisConnected('" + JsonUtil.toJson(device) + "')");
             }
 
         });
@@ -191,7 +211,7 @@ public class BleMethod implements ActivityCompat.OnRequestPermissionsResultCallb
                 serviceInfoList.add(myDeviceServiceInfo);
             }
         }
-        return gson.toJson(serviceInfoList);
+        return JsonUtil.toJson(serviceInfoList);
     }
 
 
@@ -210,19 +230,19 @@ public class BleMethod implements ActivityCompat.OnRequestPermissionsResultCallb
         bleManager.notify(bleDevice, serviceUuid, notifyUuid, new BleNotifyCallback() {
             @Override
             public void onFail(int failCode, String info, BleDevice device) {
-                MyLog.i(TAG, "ble onNotifyFail" + gson.toJson(device) + failCode);
-                javaScriptFunction.evak("onNotifyFail('" + gson.toJson(device) + "')");
+                LogUtil.i(TAG, "ble onNotifyFail" + JsonUtil.toJson(device) + failCode);
+                javaScriptFunction.evak("onNotifyFail('" + JsonUtil.toJson(device) + "')");
             }
 
             @Override
             public void onCharacteristicChanged(byte[] data, BleDevice device) {
-                MyLog.i(TAG, "ble onCharacteristicChanged" + Hex.bytesToHexString(data));
-                javaScriptFunction.evak("onCharacteristicChanged('" + Hex.bytesToHexString(data) + "')");
+                LogUtil.i(TAG, "ble onCharacteristicChanged" + HexUtil.bytesToHexString(data));
+                javaScriptFunction.evak("onCharacteristicChanged('" + HexUtil.bytesToHexString(data) + "')");
             }
 
             @Override
             public void onNotifySuccess(String notifySuccessUuid, BleDevice device) {
-                MyLog.i(TAG, "ble onNotifySuccess" + notifySuccessUuid);
+                LogUtil.i(TAG, "ble onNotifySuccess" + notifySuccessUuid);
                 javaScriptFunction.evak("onNotifySuccess('" + notifySuccessUuid + "')");
             }
 
@@ -282,7 +302,7 @@ public class BleMethod implements ActivityCompat.OnRequestPermissionsResultCallb
         if (null == bleDevice) {
             return false;
         }
-        byte[] bytes = Hex.hexStringToBytes(data);
+        byte[] bytes = HexUtil.hexStringToBytes(data);
         if (null == bytes || 1 > bytes.length) {
             return false;
         }
@@ -303,7 +323,7 @@ public class BleMethod implements ActivityCompat.OnRequestPermissionsResultCallb
 
     @JavascriptInterface
     public String getConnectedDevices() {
-        return gson.toJson(bleManager.getConnectedDevices());
+        return JsonUtil.toJson(bleManager.getConnectedDevices());
     }
 
     @JavascriptInterface
