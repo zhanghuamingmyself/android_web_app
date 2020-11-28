@@ -3,14 +3,13 @@ package com.ztn.web.javascript_interface;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
-
 import com.hb.dialog.dialog.ConfirmDialog;
 import com.hb.dialog.myDialog.ActionSheetDialog;
 import com.ztn.web.MainActivity;
 import com.ztn.web.R;
+import com.ztn.web.ShowMain;
 import com.ztn.web.utils.AppUtils;
 import com.ztn.web.utils.JsonUtil;
-import com.ztn.web.ShowMain;
 
 import java.util.HashMap;
 import java.util.Map;

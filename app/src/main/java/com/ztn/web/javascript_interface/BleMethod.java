@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.webkit.JavascriptInterface;
-
 import com.ficat.easyble.BleDevice;
 import com.ficat.easyble.BleManager;
 import com.ficat.easyble.gatt.bean.CharacteristicInfo;
@@ -20,7 +19,6 @@ import com.ztn.web.bean.call.IJavaScriptFunction;
 import com.ztn.web.utils.HexUtil;
 import com.ztn.web.utils.JsonUtil;
 import com.ztn.web.utils.LogUtil;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;

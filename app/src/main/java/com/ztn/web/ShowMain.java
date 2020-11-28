@@ -4,7 +4,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.http.SslError;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +13,6 @@ import android.webkit.ConsoleMessage;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
-
 import com.google.gson.reflect.TypeToken;
 import com.tencent.smtt.export.external.extension.proxy.ProxyWebChromeClientExtension;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
@@ -30,16 +28,9 @@ import com.ztn.web.bean.response.DeviceConnectResponse;
 import com.ztn.web.javascript_interface.BleMethod;
 import com.ztn.web.javascript_interface.CommonMethod;
 import com.ztn.web.javascript_interface.VolumeMethod;
-import com.ztn.web.utils.DisplayUtil;
-import com.ztn.web.utils.DownloadUtil;
-import com.ztn.web.utils.FileUtil;
-import com.ztn.web.utils.HttpUtil;
-import com.ztn.web.utils.JsonUtil;
-import com.ztn.web.utils.LogUtil;
-import com.ztn.web.utils.NetUtils;
-import com.ztn.web.utils.StorageUtil;
-import com.ztn.web.utils.X5WebView;
-import com.ztn.web.utils.ZipExtractorTask;
+import com.ztn.web.utils.*;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,9 +38,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import okhttp3.Callback;
-import okhttp3.Response;
 
 public class ShowMain implements IJavaScriptFunction {
 

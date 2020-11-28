@@ -7,7 +7,6 @@ import com.liulishuo.filedownloader.util.FileDownloadUtils;
 import com.ztn.web.bean.TaskStatus;
 import com.ztn.web.bean.call.IDownloadCallBack;
 
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;

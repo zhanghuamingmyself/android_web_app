@@ -1,7 +1,6 @@
 package com.ztn.web.utils;
 
 import android.util.Log;
-
 import com.ztn.web.AppConfig;
 
 

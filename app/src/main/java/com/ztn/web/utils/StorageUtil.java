@@ -2,8 +2,6 @@ package com.ztn.web.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ztn.web.App;
 import com.ztn.web.bean.response.DeviceConnectResponse;

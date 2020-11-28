@@ -2,9 +2,6 @@ package com.ztn.web;
 
 import android.app.Application;
 import android.support.multidex.MultiDex;
-import android.util.Log;
-
-import com.google.gson.Gson;
 import com.liulishuo.filedownloader.FileDownloader;
 
 
