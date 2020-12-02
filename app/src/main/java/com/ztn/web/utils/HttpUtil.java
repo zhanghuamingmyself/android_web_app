@@ -1,7 +1,6 @@
 package com.ztn.web.utils;
 
 import com.ztn.web.AppConfig;
-import okhttp3.*;
 
 public class HttpUtil {
 
